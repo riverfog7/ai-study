@@ -17,11 +17,11 @@ popd
 sed -i "s|please set this value to the path of pretrained checkpoint|${SCRIPT_DIR}/weights/pretrained_minigpt4.pth|g" "${SCRIPT_DIR}/minigpt4/eval_configs/minigpt4_eval.yaml"
 
 #sed -i '' 's/prepare_model_for_int8_training/prepare_model_for_kbit_training/g' "${SCRIPT_DIR}/minigpt4/minigpt4/models/base_model.py"
-sed -i '/decord/d' "${SCRIPT_DIR}/minigpt4/minigpt4/datasets/data_utils.py"
+#sed -i '/decord/d' "${SCRIPT_DIR}/minigpt4/minigpt4/datasets/data_utils.py"
 
 #sed -i '' "s/'cuda:{}'.format(args.gpu_id)/'mps'/g" "${SCRIPT_DIR}/minigpt4/demo.py"
-sed -i "/cudatoolkit/d" "${SCRIPT_DIR}/minigpt4/environment.yml"
-sed -i "/decord/d" "${SCRIPT_DIR}/minigpt4/environment.yml"
+#sed -i "/cudatoolkit/d" "${SCRIPT_DIR}/minigpt4/environment.yml"
+#sed -i "/decord/d" "${SCRIPT_DIR}/minigpt4/environment.yml"
 
 pushd "${SCRIPT_DIR}/minigpt4"
 if ! conda info --envs | grep -q "minigptv"; then
