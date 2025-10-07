@@ -1,3 +1,7 @@
 [submodule "MiniGPT-4/minigpt4"]
 	path = MiniGPT-4/minigpt4
 	url = https://github.com/Vision-CAIR/MiniGPT-4
+
+[submodule "AudioCLIP/AudioCLIP"]
+    path = AudioCLIP/AudioCLIP
+    url = https://github.com/AndreyGuzhov/AudioCLIP

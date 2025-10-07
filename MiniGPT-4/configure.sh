@@ -5,7 +5,7 @@ cd "${SCRIPT_DIR}"
 pushd "${SCRIPT_DIR}/minigpt4" && git reset --hard && popd
 
 mkdir -p weights
-uv tool run hf download --repo-type model --local-dir weights/vicuna-13b Vision-CAIR/vicuna --max-workers 16
+uvx --from 'huggingface_hub[cli]' hf download --repo-type model --local-dir weights/vicuna-13b Vision-CAIR/vicuna --max-workers 16
 sed -i '' "s|please set this value to the path of vicuna model|${SCRIPT_DIR}/weights/vicuna-13b|g" "${SCRIPT_DIR}/minigpt4/minigpt4/configs/models/minigpt4_vicuna0.yaml"
 
 pushd weights

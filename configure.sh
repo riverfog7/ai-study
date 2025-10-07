@@ -26,4 +26,4 @@ conda config --set auto_activate_base false
 
 uv sync --cache-dir ./.uv_cache
 
-uv run jupyter notebook --ip * --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir='/workspace/ai-study' --port 8888
+uv run jupyter notebook --ip '*' --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir='/workspace/ai-study' --port 8888
