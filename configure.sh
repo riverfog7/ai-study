@@ -1,6 +1,7 @@
 #!/bin/bash
 
-MINIGPT=1
+MINIGPT=0
+STABLE_DIFFUSION=1
 
 export GH_TOKEN='put-your-github-token-here'
 export CONDA_PLUGINS_AUTO_ACCEPT_TOS='yes'
@@ -27,12 +28,18 @@ source ~/miniconda3/bin/activate
 conda init --all
 conda config --set auto_activate_base false
 
+uv sync --cache-dir ./.uv_cache
+
 if [ $MINIGPT -eq 1 ]; then
   pushd MiniGPT-4
   ./configure.sh
   popd
 fi
 
-uv sync --cache-dir ./.uv_cache
+if [ $STABLE_DIFFUSION -eq 1 ]; then
+  pushd StableDiffusion
+  ./configure.sh
+  popd
+fi
 
 uv run jupyter notebook --ip '*' --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir='/workspace/ai-study' --port 8888
