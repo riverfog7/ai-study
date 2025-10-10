@@ -1,1 +1,6 @@
 weights/
+dataset/
+*.jsonl
+*.html
+report.md
+*.json
