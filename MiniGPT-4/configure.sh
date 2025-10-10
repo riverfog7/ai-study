@@ -24,6 +24,7 @@ sed -i "s|please set this value to the path of pretrained checkpoint|${SCRIPT_DI
 #sed -i "/decord/d" "${SCRIPT_DIR}/minigpt4/environment.yml"
 
 pushd "${SCRIPT_DIR}/minigpt4"
+conda activate base
 if ! conda info --envs | grep -q "minigptv"; then
     conda env create -f environment.yml
 else
