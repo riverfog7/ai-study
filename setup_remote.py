@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+
+import runpod
+import os
+import dotenv
+import json
+import shutil
+import time
+
+# GPU_ID = 'NVIDIA GeForce RTX 3090'
+GPU_ID = 'NVIDIA RTX A5000'
+POD_NAME = 'aisogang_dev'
+POD_ID_SAVE='./.pod_id'
+WAIT_THRESHOLD = 60
+
+shutil.copyfile('./configure.sh', '/Volumes/riverfog7.com/web/files/ai-study-configure.sh')
+dotenv.load_dotenv(dotenv.find_dotenv())
+if not runpod.check_credentials():
+    runpod.set_credentials(os.getenv("RUNPOD_API_KEY"))
+    runpod.api_key = os.getenv("RUNPOD_API_KEY")
+
+if os.path.exists(POD_ID_SAVE):
+    with open(POD_ID_SAVE, 'r') as f:
+        pod_id = f.read().strip()
+    try:
+        runpod.terminate_pod(pod_id)
+    except Exception as e:
+        print(f"Failed to terminate pod {pod_id}: {e}")
+    os.remove(POD_ID_SAVE)
+
+pod = runpod.create_pod(
+    gpu_type_id=GPU_ID,
+    image_name='',
+    template_id='dbd0hf7hma',
+    gpu_count=1,
+    name=f"{POD_NAME}",
+    cloud_type='COMMUNITY',
+    volume_mount_path='/workspace',
+    container_disk_in_gb=80,
+    volume_in_gb=0,
+    min_memory_in_gb=30,
+    min_download=800,
+    min_vcpu_count=6,
+    support_public_ip=True,
+)
+
+pod_id = pod['id']
+with open(POD_ID_SAVE, 'w') as f:
+    f.write(pod_id)
+print(f"Pod created with ID: {pod_id}")
+print()
+start_time = time.time()
+while True:
+    pod_status = runpod.get_pod(pod_id)
+    if pod_status.get("runtime"):
+        break
+    else:
+        if time.time() - start_time > WAIT_THRESHOLD:
+            print("Pod creation is taking too long. Terminating...")
+            runpod.terminate_pod(pod_id)
+            os.remove(POD_ID_SAVE)
+        time.sleep(1)
+print('\n'.join(f"{val['privatePort']} -> http://{val['ip']}:{val['publicPort']}" for val in runpod.get_pod(pod_id)['runtime']['ports'] if val['type'] == 'tcp' and val['isIpPublic']))
