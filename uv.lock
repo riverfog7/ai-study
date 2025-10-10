@@ -228,7 +228,7 @@ requires-dist = [
     { name = "opencv-python", specifier = ">=4.12.0.88" },
     { name = "pandas", specifier = ">=2.3.2" },
     { name = "pandas-stubs", specifier = "==2.3.2.250827" },
-    { name = "peft", specifier = "==0.10.0" },
+    { name = "peft", specifier = ">=0.17.0" },
     { name = "playwright", specifier = ">=1.55.0" },
     { name = "plotly", specifier = ">=6.3.0" },
     { name = "pytorch-ignite", specifier = ">=0.5.2" },
@@ -3481,7 +3481,7 @@ wheels = [
 
 [[package]]
 name = "peft"
-version = "0.10.0"
+version = "0.17.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "accelerate" },
@@ -3495,9 +3495,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "transformers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b6/aa/e5637dbdfc300e64444275b6b4d61d6b2ae9c199c8f4666f28b7058f3a6e/peft-0.10.0.tar.gz", hash = "sha256:36a7628c15f88d37abb26cfc74c22468f9037ee02e9c9b65de943cfe7c672049", size = 210126 }
+sdist = { url = "https://files.pythonhosted.org/packages/70/b8/2e79377efaa1e5f0d70a497db7914ffd355846e760ffa2f7883ab0f600fb/peft-0.17.1.tar.gz", hash = "sha256:e6002b42517976c290b3b8bbb9829a33dd5d470676b2dec7cb4df8501b77eb9f", size = 568192 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b4/5d/758c00ba637bc850f35fff7fad442c470ac3d606fe586d881b0bed7ef5a5/peft-0.10.0-py3-none-any.whl", hash = "sha256:d5249c97e818d3e31f92553c73c2953acd0ec12649b8b749afff7152cbc86cbb", size = 199070 },
+    { url = "https://files.pythonhosted.org/packages/49/fe/a2da1627aa9cb6310b6034598363bd26ac301c4a99d21f415b1b2855891e/peft-0.17.1-py3-none-any.whl", hash = "sha256:3d129d64def3d74779c32a080d2567e5f7b674e77d546e3585138216d903f99e", size = 504896 },
 ]
 
 [[package]]

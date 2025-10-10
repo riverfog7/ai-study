@@ -35,7 +35,7 @@ dependencies = [
     "opencv-python>=4.12.0.88",
     "pandas>=2.3.2",
     "pandas-stubs==2.3.2.250827",
-    "peft==0.10.0",
+    "peft>=0.17.0",
     "playwright>=1.55.0",
     "plotly>=6.3.0",
     "pytorch-ignite>=0.5.2",
