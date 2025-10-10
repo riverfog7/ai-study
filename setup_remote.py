@@ -12,6 +12,7 @@ GPU_ID = 'NVIDIA RTX A5000'
 POD_NAME = 'aisogang_dev'
 POD_ID_SAVE='./.pod_id'
 WAIT_THRESHOLD = 60
+POLLING = 1
 
 shutil.copyfile('./configure.sh', '/Volumes/riverfog7.com/web/files/ai-study-configure.sh')
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -38,10 +39,11 @@ pod = runpod.create_pod(
     volume_mount_path='/workspace',
     container_disk_in_gb=80,
     volume_in_gb=0,
-    min_memory_in_gb=30,
+    min_memory_in_gb=20,
     min_download=800,
     min_vcpu_count=6,
     support_public_ip=True,
+    allowed_cuda_versions=["12.4"],
 )
 
 pod_id = pod['id']
@@ -52,12 +54,14 @@ print()
 start_time = time.time()
 while True:
     pod_status = runpod.get_pod(pod_id)
-    if pod_status.get("runtime"):
+    if pod_status.get("runtime") and pod_status.get("runtime").get("ports"):
+        print("Pod is ready with public IP and ports.")
         break
     else:
         if time.time() - start_time > WAIT_THRESHOLD:
             print("Pod creation is taking too long. Terminating...")
             runpod.terminate_pod(pod_id)
             os.remove(POD_ID_SAVE)
-        time.sleep(1)
+            exit(1)
+        time.sleep(POLLING)
 print('\n'.join(f"{val['privatePort']} -> http://{val['ip']}:{val['publicPort']}" for val in runpod.get_pod(pod_id)['runtime']['ports'] if val['type'] == 'tcp' and val['isIpPublic']))
