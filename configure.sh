@@ -2,6 +2,7 @@
 
 MINIGPT=0
 STABLE_DIFFUSION=1
+CURRENT_BRANCH="stable_diffusion"
 
 export GH_TOKEN='put-your-github-token-here'
 export CONDA_PLUGINS_AUTO_ACCEPT_TOS='yes'
@@ -12,7 +13,7 @@ git config --global user.name "riverfog7"
 git config --global user.email "cjw9770@gmail.com"
 git config --global credential.helper store
 echo "https://$GH_TOKEN:@github.com" > ~/.git-credentials
-git clone https://github.com/riverfog7/ai-study
+git clone https://github.com/riverfog7/ai-study --branch $CURRENT_BRANCH
 cd /workspace/ai-study
 git submodule update --init --recursive
 
