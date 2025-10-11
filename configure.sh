@@ -43,4 +43,4 @@ if [ $STABLE_DIFFUSION -eq 1 ]; then
   popd
 fi
 
-uv run jupyter notebook --ip '*' --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir='/workspace/ai-study' --port 8888
+uv run jupyter notebook --ip '*' --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir='/workspace/ai-study' --port 8888 &
