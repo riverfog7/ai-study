@@ -3,6 +3,7 @@
 MINIGPT=0
 STABLE_DIFFUSION=1
 CURRENT_BRANCH="stable_diffusion"
+NOTEBOOK_WORKDIR="/workspace/ai-study/StableDiffusion"
 
 export GH_TOKEN='put-your-github-token-here'
 export CONDA_PLUGINS_AUTO_ACCEPT_TOS='yes'
@@ -43,4 +44,4 @@ if [ $STABLE_DIFFUSION -eq 1 ]; then
   popd
 fi
 
-uv run jupyter notebook --ip '*' --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir='/workspace/ai-study' --port 8888 &
+uv run jupyter notebook --ip '*' --NotebookApp.token='' --NotebookApp.password='' --allow-root --NotebookApp.notebook_dir="${NOTEBOOK_WORKDIR}" --port 8888 &
