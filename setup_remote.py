@@ -7,8 +7,8 @@ import json
 import shutil
 import time
 
-# GPU_ID = 'NVIDIA GeForce RTX 3090'
-GPU_ID = 'NVIDIA RTX A5000'
+GPU_ID = 'NVIDIA GeForce RTX 3090'
+# GPU_ID = 'NVIDIA RTX A5000'
 POD_NAME = 'aisogang_dev'
 POD_ID_SAVE='./.pod_id'
 WAIT_THRESHOLD = 60
@@ -40,7 +40,7 @@ pod = runpod.create_pod(
     container_disk_in_gb=80,
     volume_in_gb=0,
     min_memory_in_gb=20,
-    min_download=800,
+    min_download=1000,
     min_vcpu_count=6,
     support_public_ip=True,
     allowed_cuda_versions=["12.4"],
