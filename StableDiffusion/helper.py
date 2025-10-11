@@ -23,13 +23,15 @@ class DiffusionResult:
 
 
 class CustomDiffusion:
-    def __init__(self, model_id: str = "CompVis/stable-diffusion-v1-4", device: torch.device=dev):
+    def __init__(self, model_id: str = "CompVis/stable-diffusion-v1-4", device: torch.device = dev,
+                 latent_scale_factor: int = 8, height: int = 512, width: int = 512, batch_size: int = 1,
+                 guidance_scale: float = 7.5):
         # constants
-        self.LATENT_SCALE_FACTOR = 8
-        self.BATCH_SIZE = 1
-        self.HEIGHT = 512
-        self.WIDTH = 512
-        self.GUIDANCE_SCALE = 7.5
+        self.LATENT_SCALE_FACTOR = latent_scale_factor
+        self.BATCH_SIZE = batch_size
+        self.HEIGHT = height
+        self.WIDTH = width
+        self.GUIDANCE_SCALE = guidance_scale
         self.SCALING_FACTOR: Optional[float] = None
 
         self.model_id: str = model_id
@@ -73,22 +75,25 @@ class CustomDiffusion:
             del tokenized
         return result
 
-    def __generate_text_embeddings(self, txt: str) -> torch.Tensor:
-        return torch.cat([self.encode_text(""), self.encode_text(txt)])
-
-    def __from_input_embeddings(self, text_embeddings: torch.Tensor) -> torch.Tensor:
-        uncond_embeddings = self.encode_text("")
-        if uncond_embeddings.shape != text_embeddings.shape:
-            raise ValueError("Embedding shape mismatch")
-        return torch.cat([uncond_embeddings, text_embeddings])
-
-    def __sanitize_input(self, input_var: Union[str, torch.Tensor]) -> torch.Tensor:
-        if isinstance(input_var, str):
-            return self.__generate_text_embeddings(input_var)
-        elif isinstance(input_var, torch.Tensor):
-            return self.__from_input_embeddings(input_var)
+    def __sanitize_input(self, input_positive: Union[str, torch.Tensor], input_negative: Optional[Union[str, torch.Tensor]]) -> torch.Tensor:
+        if isinstance(input_positive, str):
+            text_embeddings = self.encode_text(input_positive)
+        elif isinstance(input_positive, torch.Tensor):
+            text_embeddings = input_positive.to(self.device)
         else:
-            raise ValueError("Input must be a string or a tensor")
+            raise ValueError("Invalid type for input_positive")
+
+        if input_negative is None:
+            input_negative = ""
+        if isinstance(input_negative, str):
+            negative_embeddings = self.encode_text(input_negative)
+        elif isinstance(input_negative, torch.Tensor):
+            negative_embeddings = input_negative.to(self.device)
+        else:
+            raise ValueError("Invalid type for input_negative")
+        if text_embeddings.shape != negative_embeddings.shape:
+            raise ValueError("Positive and negative embeddings must have the same shape")
+        return torch.cat([negative_embeddings, text_embeddings])
 
     def __prepare_diffusion(self, steps: int = 50, seed: int = 42):
         generator = torch.Generator(self.device).manual_seed(seed)
@@ -167,9 +172,9 @@ class CustomDiffusion:
         self.latent_list = []
         self.image_list = []
 
-    def generate(self, text: Union[str, torch.Tensor], steps: int = 50, seed: int = 42, print_steps: bool = True, decode_every_step: bool = False, callback_fn: Callable = None, callback_args: Tuple[Literal["image", "latent", "total_steps", "current_step"]] = None) -> DiffusionResult:
+    def generate(self, prompt: Union[str, torch.Tensor], negative_prompt: Optional[Union[str, torch.Tensor]], steps: int = 50, seed: int = 42, print_steps: bool = True, decode_every_step: bool = False, callback_fn: Callable = None, callback_args: Tuple[Literal["image", "latent", "total_steps", "current_step"]] = None) -> DiffusionResult:
         self.__reset_state()
-        text_embeddings = self.__sanitize_input(text)
+        text_embeddings = self.__sanitize_input(prompt, negative_prompt)
         self.__prepare_diffusion(steps, seed)
         final_latents = self.__latent_diffusion(text_embeddings, print_steps, decode_every_step, callback_fn, callback_args)
         self.image = self.__vae_decode(final_latents)
