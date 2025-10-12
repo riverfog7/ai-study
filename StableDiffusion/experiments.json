@@ -1,0 +1,110 @@
+{
+  "experiments": [
+    {
+      "id": 1,
+      "category": "art_style",
+      "name": "time_of_day_lighting",
+      "description": "Temporal lighting transitions from dawn to midnight",
+      "prompt_a": {
+        "positive": "a forest at dawn, soft morning light, golden rays, peaceful atmosphere, detailed trees, natural lighting",
+        "negative": "dark, night, moon, stars, harsh shadows, artificial light, low quality, blurry"
+      },
+      "prompt_b": {
+        "positive": "a forest at midnight, moonlight through trees, silvery light, serene night, detailed trees, natural lighting",
+        "negative": "daytime, sun, bright, colorful sky, artificial light, low quality, blurry"
+      },
+      "expected_transition": "continuous color temperature shift from warm to cool tones"
+    },
+    {
+      "id": 2,
+      "category": "art_style",
+      "name": "abstraction_level",
+      "description": "Photorealism to geometric abstraction",
+      "prompt_a": {
+        "positive": "a cat, photorealistic, detailed fur texture, realistic anatomy, high detail, professional photography",
+        "negative": "abstract, simple, geometric, cartoon, low detail, blurry, deformed"
+      },
+      "prompt_b": {
+        "positive": "a cat, geometric abstract, simple shapes, minimalist, modern art, clean lines",
+        "negative": "photorealistic, detailed fur, complex texture, realistic, photograph, blurry"
+      },
+      "expected_transition": "progressive simplification of form and texture"
+    },
+    {
+      "id": 3,
+      "category": "art_style",
+      "name": "material_transformation",
+      "description": "Solid to transparent material properties",
+      "prompt_a": {
+        "positive": "a castle made of stone and brick, solid structure, medieval architecture, textured walls, detailed masonry",
+        "negative": "transparent, glass, crystal, modern, blurry, low quality, deformed"
+      },
+      "prompt_b": {
+        "positive": "a castle made of glass and crystal, transparent structure, reflective surfaces, magical architecture, light refractions",
+        "negative": "stone, brick, opaque, rough texture, blurry, low quality, deformed"
+      },
+      "expected_transition": "gradual increase in transparency and reflectivity"
+    },
+    {
+      "id": 4,
+      "category": "mood",
+      "name": "emotional_temperature",
+      "description": "Warm inviting to cold desolate atmosphere",
+      "prompt_a": {
+        "positive": "a garden, warm and inviting, golden hour, blooming flowers, lush vegetation, pleasant atmosphere",
+        "negative": "cold, winter, frost, dead plants, desolate, dark, blurry, low quality"
+      },
+      "prompt_b": {
+        "positive": "a garden, cold and desolate, winter frost, bare branches, frozen ground, melancholic atmosphere",
+        "negative": "warm, summer, blooming, colorful, golden hour, lush, blurry, low quality"
+      },
+      "expected_transition": "seasonal and emotional shift from warm to cold"
+    },
+    {
+      "id": 5,
+      "category": "mood",
+      "name": "energy_level",
+      "description": "Static peaceful to dynamic chaotic energy",
+      "prompt_a": {
+        "positive": "a city street, peaceful and quiet, early morning, empty roads, soft light, calm atmosphere",
+        "negative": "crowded, busy, chaotic, rush hour, many people, traffic, blurry, low quality"
+      },
+      "prompt_b": {
+        "positive": "a city street, chaotic and energetic, rush hour, crowded sidewalks, busy traffic, dynamic movement",
+        "negative": "empty, quiet, peaceful, no people, calm, still, blurry, low quality"
+      },
+      "expected_transition": "increasing crowd density and implied motion"
+    },
+    {
+      "id": 6,
+      "category": "artistic_technique",
+      "name": "brush_texture_density",
+      "description": "Smooth gradient to thick impasto texture",
+      "prompt_a": {
+        "positive": "a mountain landscape, smooth gradient painting, soft transitions, watercolor style, delicate brushwork",
+        "negative": "thick paint, impasto, rough texture, heavy brushstrokes, blurry, low quality"
+      },
+      "prompt_b": {
+        "positive": "a mountain landscape, thick impasto oil painting, heavy brushstrokes, textured surface, expressive technique",
+        "negative": "smooth, gradient, watercolor, delicate, flat, blurry, low quality"
+      },
+      "expected_transition": "progressive increase in paint texture and brushstroke visibility"
+    },
+    {
+      "id": 7,
+      "category": "artistic_technique",
+      "name": "color_saturation_spectrum",
+      "description": "Vibrant saturated to muted pastel colors",
+      "prompt_a": {
+        "positive": "a flower bouquet, vibrant saturated colors, bold hues, rich tones, vivid colors, high contrast",
+        "negative": "muted, pastel, desaturated, pale, washed out, dull, blurry, low quality"
+      },
+      "prompt_b": {
+        "positive": "a flower bouquet, muted pastel tones, soft colors, gentle hues, subtle palette, low saturation",
+        "negative": "vibrant, saturated, bold, vivid, high contrast, intense, blurry, low quality"
+      },
+      "expected_transition": "gradual desaturation across color spectrum"
+    }
+  ],
+  "common_negative_base": "low quality, worst quality, blurry, jpeg artifacts, distorted, deformed, duplicate, watermark, signature, text"
+}
