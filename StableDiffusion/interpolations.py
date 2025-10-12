@@ -40,29 +40,29 @@ def interpolate_slerp(emb1, emb2, steps):
     return interpolated
 
 
-def interpolate_nao(emb1, emb2, steps, iterations=50, lr=0.01):
-    interpolated = []
-
-    path = torch.stack(interpolate_slerp(emb1, emb2, steps))
-    path.requires_grad = True
-
-    optimizer = torch.optim.Adam([path], lr=lr)
-
-    for _ in range(iterations):
-        optimizer.zero_grad()
-
-        norms = torch.norm(path.reshape(steps, -1), dim=1)
-        expected_norm = torch.norm(emb1.reshape(-1))
-
-        loss = torch.mean((norms - expected_norm) ** 2)
-        loss.backward()
-        optimizer.step()
-
-        with torch.no_grad():
-            path[0] = emb1
-            path[-1] = emb2
-
-    return [path[i].detach() for i in range(steps)]
+# def interpolate_nao(emb1, emb2, steps, iterations=50, lr=0.01):
+#     interpolated = []
+#
+#     path = torch.stack(interpolate_slerp(emb1, emb2, steps))
+#     path.requires_grad = True
+#
+#     optimizer = torch.optim.Adam([path], lr=lr)
+#
+#     for _ in range(iterations):
+#         optimizer.zero_grad()
+#
+#         norms = torch.norm(path.reshape(steps, -1), dim=1)
+#         expected_norm = torch.norm(emb1.reshape(-1))
+#
+#         loss = torch.mean((norms - expected_norm) ** 2)
+#         loss.backward()
+#         optimizer.step()
+#
+#         with torch.no_grad():
+#             path[0] = emb1
+#             path[-1] = emb2
+#
+#     return [path[i].detach() for i in range(steps)]
 
 
 def interpolate_cog(emb1, emb2, steps):
