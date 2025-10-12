@@ -15,6 +15,7 @@ dependencies = [
     "fastparquet>=2024.11.0",
     "ftfy>=6.3.1",
     "gradio-client>=1.13.3",
+    "hf-transfer>=0.1.9",
     "hf-xet>=1.1.10",
     "huggingface-hub[cli,inference]>=0.35.0",
     "iopath>=0.1.10",
