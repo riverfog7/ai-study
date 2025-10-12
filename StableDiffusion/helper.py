@@ -1,8 +1,13 @@
+from __future__ import annotations
+import time
 import torch
 import os
 
 from collections.abc import Callable
 from tqdm import tqdm
+import plotly.express as px
+import numpy as np
+from IPython import display
 from dataclasses import dataclass
 from PIL import Image
 from diffusers import StableDiffusionPipeline, AutoencoderKL, UNet2DConditionModel
@@ -20,6 +25,66 @@ class DiffusionResult:
     latents: torch.Tensor
     image_list: List[Image.Image]
     latent_list: List[torch.Tensor]
+
+
+def visualize_diffusion(current_step, total_steps, image, sleep=0):
+    display.clear_output(wait=True)
+    print(f"Step {current_step + 1}/{total_steps}")
+    display.display(image)
+    if sleep > 0:
+        time.sleep(sleep)
+
+
+def visualize_diffusion_progress(result: DiffusionResult, save_path=None, slider_speed=50):
+    fig = px.imshow(np.array(result.image_list), animation_frame=0, width=800, height=600)
+    fig.update_layout(
+        title="Diffusion Process",
+        updatemenus=[{
+            "type": "buttons",
+            "buttons": [{
+                "label": "Play",
+                "method": "animate",
+                "args": [None, {"frame": {"duration": slider_speed, "redraw": True}, "fromcurrent": True}]
+            }, {
+                "label": "Pause",
+                "method": "animate",
+                "args": [[None], {"frame": {"duration": 0, "redraw": False}, "mode": "immediate",
+                                  "transition": {"duration": 0}}]
+            }]
+        }]
+    )
+    if save_path:
+        fig.write_html(save_path)
+    fig.show()
+
+
+def visualize_interpolation(results: List[DiffusionResult], save_path=None, show=True, slider_speed=75):
+    fig = px.imshow(
+        np.array([result.image for result in results]),
+        animation_frame=0,
+        width=800,
+        height=600
+    )
+    fig.update_layout(
+        title="Interpolation between prompts",
+        updatemenus=[{
+            "type": "buttons",
+            "buttons": [{
+                "label": "Play",
+                "method": "animate",
+                "args": [None, {"frame": {"duration": slider_speed, "redraw": True}, "fromcurrent": True}]
+            }, {
+                "label": "Pause",
+                "method": "animate",
+                "args": [[None], {"frame": {"duration": 0, "redraw": False}, "mode": "immediate",
+                                  "transition": {"duration": 0}}]
+            }]
+        }]
+    )
+    if save_path:
+        fig.write_html(save_path)
+    if show:
+        fig.show()
 
 
 class CustomDiffusion:
@@ -70,12 +135,14 @@ class CustomDiffusion:
 
         with torch.no_grad():
             tokenized = self.tokenizer(txt, return_tensors='pt', padding="max_length",
-                                       max_length=self.tokenizer.model_max_length, truncation=True).input_ids.to(self.device)
+                                       max_length=self.tokenizer.model_max_length, truncation=True).input_ids.to(
+                self.device)
             result = self.text_encoder(tokenized)[0].to(self.device)
             del tokenized
         return result
 
-    def __sanitize_input(self, input_positive: Union[str, torch.Tensor], input_negative: Optional[Union[str, torch.Tensor]]) -> torch.Tensor:
+    def __sanitize_input(self, input_positive: Union[str, torch.Tensor],
+                         input_negative: Optional[Union[str, torch.Tensor]]) -> torch.Tensor:
         if isinstance(input_positive, str):
             text_embeddings = self.encode_text(input_positive)
         elif isinstance(input_positive, torch.Tensor):
@@ -111,7 +178,9 @@ class CustomDiffusion:
         self.scheduler.set_timesteps(steps)
         self.latents = self.latents * self.scheduler.init_noise_sigma
 
-    def __latent_diffusion(self, text_embeddings: torch.Tensor, print_steps: bool = True, decode_every_step: bool = False, callback_fn: Callable = None, callback_args: Tuple[Literal["image", "latent", "total_steps", "current_step"]] = None) -> torch.Tensor:
+    def __latent_diffusion(self, text_embeddings: torch.Tensor, print_steps: bool = True,
+                           decode_every_step: bool = False, callback_fn: Callable = None, callback_args: Tuple[
+                Literal["image", "latent", "total_steps", "current_step"]] = None) -> torch.Tensor:
         assert self.unet is not None, "UNet model is not loaded"
         assert self.scheduler is not None, "Scheduler is not loaded"
         assert self.latents is not None, "Latents are not initialized"
@@ -172,11 +241,15 @@ class CustomDiffusion:
         self.latent_list = []
         self.image_list = []
 
-    def generate(self, prompt: Union[str, torch.Tensor], negative_prompt: Optional[Union[str, torch.Tensor]], steps: int = 50, seed: int = 42, print_steps: bool = True, decode_every_step: bool = False, callback_fn: Callable = None, callback_args: Tuple[Literal["image", "latent", "total_steps", "current_step"]] = None) -> DiffusionResult:
+    def generate(self, prompt: Union[str, torch.Tensor], negative_prompt: Optional[Union[str, torch.Tensor]],
+                 steps: int = 50, seed: int = 42, print_steps: bool = True, decode_every_step: bool = False,
+                 callback_fn: Callable = None, callback_args: Tuple[
+                Literal["image", "latent", "total_steps", "current_step"]] = None) -> DiffusionResult:
         self.__reset_state()
         text_embeddings = self.__sanitize_input(prompt, negative_prompt)
         self.__prepare_diffusion(steps, seed)
-        final_latents = self.__latent_diffusion(text_embeddings, print_steps, decode_every_step, callback_fn, callback_args)
+        final_latents = self.__latent_diffusion(text_embeddings, print_steps, decode_every_step, callback_fn,
+                                                callback_args)
         self.image = self.__vae_decode(final_latents)
 
         result = DiffusionResult(
