@@ -64,4 +64,18 @@ while True:
             os.remove(POD_ID_SAVE)
             exit(1)
         time.sleep(POLLING)
-print('\n'.join(f"{val['privatePort']} -> http://{val['ip']}:{val['publicPort']}" for val in runpod.get_pod(pod_id)['runtime']['ports'] if val['type'] == 'tcp' and val['isIpPublic']))
+print('\n'.join(f"{val['privatePort']} -> http://{val['ip']}:{val['publicPort']}" for val in pod_status['runtime']['ports'] if val['type'] == 'tcp' and val['isIpPublic']))
+
+jupyter_port = 8888
+external_jupyter_port = -1
+for val in pod_status['runtime']['ports']:
+    if val['privatePort'] == jupyter_port and val['type'] == 'tcp' and val['isIpPublic']:
+        external_jupyter_port = val['publicPort']
+        break
+if external_jupyter_port == -1:
+    print(f"Failed to find public port mapping for Jupyter port {jupyter_port}.")
+    runpod.terminate_pod(pod_id)
+    os.remove(POD_ID_SAVE)
+    exit(1)
+jupyter_url = f"http://{pod_status['runtime']['ports'][0]['ip']}:{external_jupyter_port}/lab"
+os.system(f"printf {jupyter_url} | pbcopy")
