@@ -5,6 +5,7 @@ STABLE_DIFFUSION=1
 CURRENT_BRANCH="stable_diffusion"
 NOTEBOOK_WORKDIR="/workspace/ai-study/StableDiffusion"
 
+# key is github personal access token with repo scope
 export GH_TOKEN='put-your-github-token-here'
 export CONDA_PLUGINS_AUTO_ACCEPT_TOS='yes'
 apt update && apt install aria2 unzip zip curl wget vim screen git btop nvme-cli axel nvtop -y
