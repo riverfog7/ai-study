@@ -2,7 +2,7 @@
 
 MINIGPT=1
 
-export GH_TOKEN='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'
+export GH_TOKEN='put-your-github-token-here'
 export CONDA_PLUGINS_AUTO_ACCEPT_TOS='yes'
 apt update && apt install aria2 unzip zip curl wget vim screen git btop nvme-cli axel nvtop -y
 
