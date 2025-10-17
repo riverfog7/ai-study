@@ -5,10 +5,8 @@ import dotenv
 
 POD_ID_SAVE='./.pod_id'
 
-dotenv.load_dotenv(dotenv.find_dotenv())
-if not runpod.check_credentials():
-    runpod.set_credentials(os.getenv("RUNPOD_API_KEY"))
-    runpod.api_key = os.getenv("RUNPOD_API_KEY")
+dotenv.load_dotenv(dotenv.find_dotenv(), override=True)
+runpod.api_key = os.getenv("RUNPOD_API_KEY")
 
 if os.path.exists(POD_ID_SAVE):
     with open(POD_ID_SAVE, 'r') as f:

@@ -67,12 +67,14 @@ print('\n'.join(f"{val['privatePort']} -> http://{val['ip']}:{val['publicPort']}
 
 jupyter_port = 8888
 external_jupyter_port = -1
+jupyter_ip = -1
 for val in pod_status['runtime']['ports']:
     if val['privatePort'] == jupyter_port and val['type'] == 'tcp' and val['isIpPublic']:
         external_jupyter_port = val['publicPort']
+        jupyter_ip = val['ip']
         break
-if external_jupyter_port == -1:
-    print(f"Failed to find public port mapping for Jupyter port {jupyter_port}.")
+if external_jupyter_port == -1 or jupyter_ip == -1:
+    print("Failed to retrieve Jupyter port information. Terminating pod...")
     runpod.terminate_pod(pod_id)
     os.remove(POD_ID_SAVE)
     exit(1)
