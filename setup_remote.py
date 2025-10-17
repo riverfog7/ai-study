@@ -15,10 +15,8 @@ WAIT_THRESHOLD = 60
 POLLING = 1
 
 shutil.copyfile('./configure.sh', '/Volumes/riverfog7.com/web/files/ai-study-configure.sh')
-dotenv.load_dotenv(dotenv.find_dotenv())
-if not runpod.check_credentials():
-    runpod.set_credentials(os.getenv("RUNPOD_API_KEY"))
-    runpod.api_key = os.getenv("RUNPOD_API_KEY")
+dotenv.load_dotenv(dotenv.find_dotenv(), override=True)
+runpod.api_key = os.getenv("RUNPOD_API_KEY")
 
 if os.path.exists(POD_ID_SAVE):
     with open(POD_ID_SAVE, 'r') as f:
@@ -32,7 +30,7 @@ if os.path.exists(POD_ID_SAVE):
 pod = runpod.create_pod(
     gpu_type_id=GPU_ID,
     image_name='',
-    template_id='dbd0hf7hma',
+    template_id='8bgnoq0cum',
     gpu_count=1,
     name=f"{POD_NAME}",
     cloud_type='COMMUNITY',
