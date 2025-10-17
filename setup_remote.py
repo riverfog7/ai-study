@@ -42,6 +42,7 @@ pod = runpod.create_pod(
     min_vcpu_count=6,
     support_public_ip=True,
     allowed_cuda_versions=["12.8"],
+    ports="8888/tcp,22/tcp,8000/tcp"
 )
 
 pod_id = pod['id']
